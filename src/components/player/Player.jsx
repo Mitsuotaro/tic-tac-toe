@@ -13,8 +13,6 @@ export default function Player({ initialName, symbol }){
     }
 
     function handleChangeName(type, event){
-        console.log('type: ', type);
-        console.log('event: ', event);
         setPlayerName(event.target.value);
     }
 

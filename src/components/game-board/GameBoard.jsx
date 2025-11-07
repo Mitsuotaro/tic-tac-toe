@@ -1,25 +1,50 @@
+import { useState } from 'react';
+
 const initialGameBoard = [
     [null, null, null],
     [null, null, null],
     [null, null, null],
 ];
 
-export default function GameBoard(){
+export default function GameBoard({ handleOnClickTile, symbol }){
+    const [ gameBoard, setGameBoard ] = useState(initialGameBoard);
+
+
+    
+
     function onClickTile(rowIndex, colIndex){
-        console.log("rowIndex: ", rowIndex)
-        console.log("colIndex: ", colIndex)
+        handleOnClickTile();
+
+        const updateGameBoard = (prevGameBoard) => {
+            const updatedBoard = [...prevGameBoard.map(innerBoard => [...innerBoard])];
+            updatedBoard[rowIndex][colIndex] = symbol;
+            return updatedBoard;
+        }
+
+        setGameBoard((prevBoard) => updateGameBoard(prevBoard));
+    }
+
+    function renderTiles(){
+        return gameBoard.map((row, rowIndex) => 
+            <li key={rowIndex}>
+                <ol>
+                    {
+                    row.map((playerSymbol, colIndex) => {
+                            return (
+                                <li key={colIndex}>
+                                    <button onClick={() => onClickTile(rowIndex, colIndex)}>{playerSymbol}</button>
+                                </li>
+                            );
+                        })
+                    }
+                </ol>
+            </li>);
     }
 
     return (
         <>
         <ol id="game-board">
-            {initialGameBoard.map((row, rowIndex) => <li key={rowIndex}>
-                <ol>
-                    {row.map((col, colIndex) => {
-                        return <li onClick={() => onClickTile(rowIndex, colIndex)} key={colIndex}>col </li>
-                    })}
-                </ol>
-            </li>)}
+            { renderTiles() }
         </ol>
         </>
     );
