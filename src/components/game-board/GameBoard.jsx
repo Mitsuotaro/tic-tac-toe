@@ -6,22 +6,19 @@ const initialGameBoard = [
     [null, null, null],
 ];
 
-export default function GameBoard({ handleOnClickTile, symbol }){
+export default function GameBoard({ onClickTile, activeSymbol }){
     const [ gameBoard, setGameBoard ] = useState(initialGameBoard);
 
-
-    
-
-    function onClickTile(rowIndex, colIndex){
-        handleOnClickTile();
-
+    function handleOnClickTile(rowIndex, colIndex){
         const updateGameBoard = (prevGameBoard) => {
             const updatedBoard = [...prevGameBoard.map(innerBoard => [...innerBoard])];
-            updatedBoard[rowIndex][colIndex] = symbol;
+            updatedBoard[rowIndex][colIndex] = activeSymbol;
             return updatedBoard;
         }
 
         setGameBoard((prevBoard) => updateGameBoard(prevBoard));
+
+        onClickTile();
     }
 
     function renderTiles(){
@@ -32,7 +29,7 @@ export default function GameBoard({ handleOnClickTile, symbol }){
                     row.map((playerSymbol, colIndex) => {
                             return (
                                 <li key={colIndex}>
-                                    <button onClick={() => onClickTile(rowIndex, colIndex)}>{playerSymbol}</button>
+                                    <button onClick={() => handleOnClickTile(rowIndex, colIndex)}>{playerSymbol}</button>
                                 </li>
                             );
                         })
