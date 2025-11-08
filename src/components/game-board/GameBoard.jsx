@@ -1,25 +1,20 @@
-import { useState } from 'react';
+import { INITIAL_GAME_BOARD } from '../../constants/gameConstants.js';
 
-const initialGameBoard = [
-    [null, null, null],
-    [null, null, null],
-    [null, null, null],
-];
+export default function GameBoard({ onClickTile, turns }){
+    
+    // const [ gameBoard, setGameBoard ] = useState(INITIAL_GAME_BOARD);
 
-export default function GameBoard({ onClickTile, activeSymbol }){
-    const [ gameBoard, setGameBoard ] = useState(initialGameBoard);
+    // function handleOnClickTile(rowIndex, colIndex){
+    //     const updateGameBoard = (prevGameBoard) => {
+    //         const updatedBoard = [...prevGameBoard.map(innerBoard => [...innerBoard])];
+    //         updatedBoard[rowIndex][colIndex] = activeSymbol;
+    //         return updatedBoard;
+    //     }
 
-    function handleOnClickTile(rowIndex, colIndex){
-        const updateGameBoard = (prevGameBoard) => {
-            const updatedBoard = [...prevGameBoard.map(innerBoard => [...innerBoard])];
-            updatedBoard[rowIndex][colIndex] = activeSymbol;
-            return updatedBoard;
-        }
+    //     setGameBoard((prevBoard) => updateGameBoard(prevBoard));
 
-        setGameBoard((prevBoard) => updateGameBoard(prevBoard));
-
-        onClickTile();
-    }
+    //     onClickTile();
+    // }
 
     function renderTiles(){
         return gameBoard.map((row, rowIndex) => 
@@ -29,7 +24,7 @@ export default function GameBoard({ onClickTile, activeSymbol }){
                     row.map((playerSymbol, colIndex) => {
                             return (
                                 <li key={colIndex}>
-                                    <button onClick={() => handleOnClickTile(rowIndex, colIndex)}>{playerSymbol}</button>
+                                    <button onClick={() => onClickTile(rowIndex, colIndex)}>{playerSymbol}</button>
                                 </li>
                             );
                         })

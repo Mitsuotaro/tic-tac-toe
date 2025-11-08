@@ -1,14 +1,35 @@
+// React
 import { useState } from 'react';
-import { SYMBOLS } from './constants/smybols.js';
+
+// Constants
+import { SYMBOLS } from './constants/gameConstants.js';
+
+// Components
 import Player from './components/player/Player.jsx';
 import GameBoard from './components/game-board/GameBoard.jsx';
-
+import Log from './components/log/Log.jsx';
 
 function App() {
+    const [ gameTurns, setGameTurns ] = useState([]);
     const [ activePlayer, setActivePlayer ] = useState(SYMBOLS['X']);
 
-    function handleOnClickTile(){
+    function handleOnClickTile(rowIndex, colIndex){
         setActivePlayer((prev) => prev === SYMBOLS['X'] ? SYMBOLS['O'] : SYMBOLS['X']);
+
+        setGameTurns((prevTurns) => {
+            let currentPlayer = SYMBOLS['X'];
+
+            if(prevTurns.length > 0 && prevTurns[0].player === SYMBOLS['X']){
+                currentPlayer = SYMBOLS['O'];
+            }
+
+            const updatedTurns = [
+                {  square: { row: rowIndex, col: colIndex, player: currentPlayer } }, 
+                ...prevTurns
+            ];
+
+            return updatedTurns;
+        });
     }
 
     return (
@@ -29,10 +50,13 @@ function App() {
 
                 </ol>
                 <GameBoard 
-                    onClickTile={handleOnClickTile} 
-                    activeSymbol={activePlayer}
+                    onClickTile={handleOnClickTile}
+                    turns={gameTurns}
                 />
             </div>
+            <Log
+            
+            />
         </main>
     );
 }
