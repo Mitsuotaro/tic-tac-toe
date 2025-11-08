@@ -9,22 +9,27 @@ import Player from './components/player/Player.jsx';
 import GameBoard from './components/game-board/GameBoard.jsx';
 import Log from './components/log/Log.jsx';
 
+function deriveActivePlayer(gameTurns){
+    let currentPlayer = SYMBOLS['X'];
+
+    if(gameTurns.length > 0 && gameTurns[0].player === SYMBOLS['X']){
+        currentPlayer = SYMBOLS['O'];
+    }
+    
+    return currentPlayer;
+}
+
 function App() {
     const [ gameTurns, setGameTurns ] = useState([]);
-    const [ activePlayer, setActivePlayer ] = useState(SYMBOLS['X']);
+
+    const activePlayer = deriveActivePlayer(gameTurns);
 
     function handleOnClickTile(rowIndex, colIndex){
-        setActivePlayer((prev) => prev === SYMBOLS['X'] ? SYMBOLS['O'] : SYMBOLS['X']);
-
         setGameTurns((prevTurns) => {
-            let currentPlayer = SYMBOLS['X'];
-
-            if(prevTurns.length > 0 && prevTurns[0].player === SYMBOLS['X']){
-                currentPlayer = SYMBOLS['O'];
-            }
+            const currentPlayer = deriveActivePlayer(prevTurns);
 
             const updatedTurns = [
-                {  square: { row: rowIndex, col: colIndex, player: currentPlayer } }, 
+                {  square: { row: rowIndex, col: colIndex}, player: currentPlayer }, 
                 ...prevTurns
             ];
 
@@ -55,7 +60,7 @@ function App() {
                 />
             </div>
             <Log
-            
+                turns={gameTurns}
             />
         </main>
     );
