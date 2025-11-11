@@ -1,17 +1,7 @@
-import { INITIAL_GAME_BOARD } from '../../constants/gameConstants.js';
 
-export default function GameBoard({ onClickTile, turns }){
-    let gameBoard = INITIAL_GAME_BOARD;
-
-    for (const turn of turns){
-        const { square, player } = turn;
-        const { row, col } = square;
-
-        gameBoard[row][col] = player;
-    }
-
+export default function GameBoard({ onClickTile, board }){
     function renderTiles(){
-        return gameBoard.map((row, rowIndex) => 
+        return board.map((row, rowIndex) => 
             <li key={rowIndex}>
                 <ol>
                     {
