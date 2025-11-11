@@ -29,7 +29,10 @@ function App() {
 
     const activePlayer = deriveActivePlayer(gameTurns);
 
-    let gameBoard = INITIAL_GAME_BOARD;
+    let gameBoard = [...INITIAL_GAME_BOARD.map((arr) => [...arr])];
+    // let gameBoard = INITIAL_GAME_BOARD;
+    console.log("gameBoard: ", gameBoard);
+    console.log("INITIAL_GAME_BOARD: ", INITIAL_GAME_BOARD);
 
     for (const turn of gameTurns){
         const { square, player } = turn;
@@ -37,11 +40,6 @@ function App() {
 
         gameBoard[row][col] = player;
     }
-
-    let obj = {
-        firstName: "mark",
-        lastName: "crisostomo"
-    };
 
     let winner;
 
@@ -59,6 +57,9 @@ function App() {
         }
     }
 
+    const isDraw = gameTurns.length === 9 && !winner;
+
+
     function handleOnClickTile(rowIndex, colIndex){
         setGameTurns((prevTurns) => {
             const currentPlayer = deriveActivePlayer(prevTurns);
@@ -70,6 +71,10 @@ function App() {
 
             return updatedTurns;
         });
+    }
+
+    function handleRematch(){
+        setGameTurns([]);
     }
 
     return (
@@ -91,7 +96,9 @@ function App() {
 
                 </ol>
 
-                { winner && <GameOver winner={winner}/>}
+                { (winner || isDraw) && 
+                    <GameOver winner={winner} onClickRematch={handleRematch}
+                />}
 
                 <GameBoard 
                     onClickTile={handleOnClickTile}

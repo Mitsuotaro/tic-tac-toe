@@ -12,7 +12,7 @@ export default function Player({ initialName, symbol, isActive }){
         setIsEditing((prev) => !prev);
     }
 
-    function handleChangeName(type, event){
+    function handleChangeName(event){
         setPlayerName(event.target.value);
     }
 
@@ -22,7 +22,7 @@ export default function Player({ initialName, symbol, isActive }){
                 type="text" 
                 required 
                 value={playerName} 
-                onChange={() => handleChangeName('test', event)}
+                onChange={() => handleChangeName(event)}
             />
         );
 
