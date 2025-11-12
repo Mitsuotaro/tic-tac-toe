@@ -5,7 +5,8 @@ import { useState } from 'react';
 import { 
     SYMBOLS, 
     WINNING_COMBINATIONS,
-    INITIAL_GAME_BOARD
+    INITIAL_GAME_BOARD,
+    PLAYERS
 } from './constants/gameConstants.js';
 
 // Components
@@ -24,25 +25,20 @@ function deriveActivePlayer(gameTurns){
     return currentPlayer;
 };
 
-function App() {
-    const [ gameTurns, setGameTurns ] = useState([]);
-
-    const activePlayer = deriveActivePlayer(gameTurns);
-
-    let gameBoard = INITIAL_GAME_BOARD;
+function deriveGameBoard(gameTurns){
+    let gameBoard = [...INITIAL_GAME_BOARD.map((arr) => [...arr])];
 
     for (const turn of gameTurns){
         const { square, player } = turn;
         const { row, col } = square;
 
         gameBoard[row][col] = player;
-    }
-
-    let obj = {
-        firstName: "mark",
-        lastName: "crisostomo"
     };
 
+    return gameBoard;
+}
+
+function deriveWinner(gameBoard, players){
     let winner;
 
     for (const combination of WINNING_COMBINATIONS){
@@ -55,9 +51,24 @@ function App() {
             firstTileSymbol === secondTileSymbol &&
             firstTileSymbol === thirdTileSymbol 
         ){
-           winner = firstTileSymbol;
+           winner = players[firstTileSymbol];
         }
     }
+
+    return winner;
+};
+
+function App() {
+    const [ players, setPlayers ] = useState(PLAYERS);
+
+    const [ gameTurns, setGameTurns ] = useState([]);
+
+    const activePlayer = deriveActivePlayer(gameTurns);
+    const gameBoard = deriveGameBoard(gameTurns);
+    const winner = deriveWinner(gameBoard, players);
+
+    const isDraw = gameTurns.length === 9 && !winner;
+
 
     function handleOnClickTile(rowIndex, colIndex){
         setGameTurns((prevTurns) => {
@@ -70,6 +81,20 @@ function App() {
 
             return updatedTurns;
         });
+    };
+
+    function handleRematch(){
+        setGameTurns([]);
+    };
+
+    function handlePlayerNameChange(symbol, newName){
+        setPlayers((prev) => {
+            return { 
+                ...prev,
+                [symbol]: newName,
+            }
+        });
+
     }
 
     return (
@@ -78,20 +103,24 @@ function App() {
 
                 <ol id="players" className="highlight-player">
                     <Player 
-                        initialName="player one" 
+                        initialName={PLAYERS.X} 
                         symbol={SYMBOLS['X']}
                         isActive={activePlayer === SYMBOLS['X']}
+                        onChangeName={handlePlayerNameChange}
                     />
 
                     <Player 
-                        initialName="player two" 
+                        initialName={PLAYERS.O} 
                         symbol={SYMBOLS['O']}
                         isActive={activePlayer === SYMBOLS['O']}
+                        onChangeName={handlePlayerNameChange}
                     />
 
                 </ol>
 
-                { winner && <GameOver winner={winner}/>}
+                { (winner || isDraw) && 
+                    <GameOver winner={winner} onClickRematch={handleRematch}
+                />}
 
                 <GameBoard 
                     onClickTile={handleOnClickTile}
