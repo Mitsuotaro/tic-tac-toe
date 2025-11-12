@@ -9,6 +9,11 @@ export const INITIAL_GAME_BOARD = [
     [null, null, null],
 ];
 
+export const PLAYERS = {
+    X: 'Player One',
+    O: 'Player Two'
+};
+
 export const WINNING_COMBINATIONS = [
     [
         { row: 0, column: 0 },
